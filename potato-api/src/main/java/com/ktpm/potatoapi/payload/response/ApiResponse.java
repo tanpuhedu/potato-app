@@ -12,9 +12,9 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL )
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApiResponse<T> {
-    private T data;
-    private String message;
+    T data;
+    String message;
 
     @Builder.Default
-    private Integer status = 1000; // Default status successful
+    Integer status = 1000; // Default status successful
 }

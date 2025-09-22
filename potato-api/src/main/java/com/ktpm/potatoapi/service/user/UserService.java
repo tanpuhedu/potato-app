@@ -10,5 +10,5 @@ public interface UserService {
     UserResponse getById(Long id);
     UserResponse createCustomer(UserRequest request);
     UserResponse update(Long id, UserRequest request);
-    void delete(Long id);
+    UserResponse updateStatus(Long id, int status);
 }

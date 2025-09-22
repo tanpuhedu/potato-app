@@ -58,8 +58,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Long id) {
-        userRepository.findById(id).orElseThrow(() -> new RuntimeException("not found"));
-        userRepository.deleteById(id);
+    public UserResponse updateStatus(Long id, int status) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("not found"));
+
+        user.setStatus(status);
+
+        return mapper.toResponse(userRepository.save(user));
     }
 }

@@ -17,8 +17,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
+
     UserService userService;
 
+    // Thành code
+    /*
     @GetMapping("/admin/users")
     @Operation(summary = "get list of users")
     public ApiResponse<List<UserResponse>> getAll() {
@@ -64,4 +67,5 @@ public class UserController {
                 .message("update user successfully")
                 .build();
     }
+     */
 }

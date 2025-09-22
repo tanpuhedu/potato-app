@@ -1,5 +1,7 @@
 package com.ktpm.potatoapi.service.user;
 
+import com.ktpm.potatoapi.exception.LogicCustomException;
+import com.ktpm.potatoapi.payload.request.UserLogInRequest;
 import com.ktpm.potatoapi.payload.request.UserRequest;
 import com.ktpm.potatoapi.payload.request.UserSignUpRequest;
 import com.ktpm.potatoapi.payload.response.UserLogInResponse;
@@ -9,10 +11,12 @@ import com.ktpm.potatoapi.enums.EntityStatus;
 import com.ktpm.potatoapi.enums.Role;
 import com.ktpm.potatoapi.mapper.UserMapper;
 import com.ktpm.potatoapi.repository.UserRepository;
+import com.ktpm.potatoapi.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,15 +31,64 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
-    UserMapper mapper;
     PasswordEncoder passwordEncoder;
+    UserMapper userMapper;
 
     @Override
     public UserLogInResponse signUp(UserSignUpRequest userSignUpRequest , HttpServletRequest httpRequest) {
+        Optional<User> checker = userRepository.findByEmail(userSignUpRequest.getEmail());
+        if (checker.isPresent()) {
+            log.error("Email already exist");
+            LogicCustomException logicCustomException = new LogicCustomException();
+            logicCustomException.setMessage("Email is already in use");
+            logicCustomException.setCode(400);
+            throw logicCustomException;
+        }
 
-        return null;
+        // Create new user
+        User user = userMapper.mapSignUpToEntity(userSignUpRequest);
+        user.setPassword(passwordEncoder.encode(userSignUpRequest.getPassword()));
+        User savedUser = userRepository.save(user);
+
+        //Generate Jwt token
+        UserLogInResponse userLogInResponse = new UserLogInResponse();
+        userLogInResponse.setFullName(savedUser.getFullName());
+        userLogInResponse.setEmail(savedUser.getEmail());
+        userLogInResponse.setToken(JwtUtils.createToken(savedUser, httpRequest));
+        log.info("{} sign up success", savedUser.getEmail());
+
+        return userLogInResponse;
+    }
+
+    @Override
+    public UserLogInResponse logIn(UserLogInRequest userLogInRequest, HttpServletRequest request) {
+        Optional<User> checker = userRepository.findByEmail(userLogInRequest.getEmail());
+        if(checker.isEmpty()) {
+            log.error("Email or password is incorrect");
+            LogicCustomException logicCustomException = new LogicCustomException();
+            logicCustomException.setMessage("Username or password is incorrect");
+            logicCustomException.setCode(401);
+            throw logicCustomException;
+        }
+        if(!passwordEncoder.matches(userLogInRequest.getPassword(), checker.get().getPassword())) {
+            log.error("Email or password is incorrect");
+            LogicCustomException logicCustomException = new LogicCustomException();
+            logicCustomException.setMessage("Username or password is incorrect");
+            logicCustomException.setCode(401);
+            throw logicCustomException;
+        }
+
+        // Generate token
+        UserLogInResponse userLogInResponse = new UserLogInResponse();
+        userLogInResponse.setFullName(checker.get().getFullName());
+        userLogInResponse.setEmail(checker.get().getEmail());
+        userLogInResponse.setToken(JwtUtils.createToken(checker.get(), request));
+        log.info("{} log in success", userLogInResponse.getFullName());
+
+        return userLogInResponse;
     }
 
     @Override

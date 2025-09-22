@@ -39,6 +39,7 @@ public class User {
     @PrePersist
     protected void onCreate() {
         this.status = EntityStatus.ACTIVE;
+        this.role = Role.CUSTOMER;
     }
 
 }

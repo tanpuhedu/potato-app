@@ -1,4 +1,4 @@
-package com.ktpm.potatoapi.payload.request;
+package com.ktpm.potatoapi.payload.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,8 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserRequest {
-    String username;
-    String fullName;
-    String password;
+public class CategoryResponse {
+    Integer id;
+    String name;
 }

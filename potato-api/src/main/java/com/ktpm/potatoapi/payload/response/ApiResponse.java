@@ -13,9 +13,9 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL )
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApiResponse<T> {
-    @Builder.Default
-    int status = 1000; // trạng thái mặc định khi response thành công
-
-    String message;
     T data;
+    String message;
+
+    @Builder.Default
+    Integer status = 1000; // Default status successful
 }

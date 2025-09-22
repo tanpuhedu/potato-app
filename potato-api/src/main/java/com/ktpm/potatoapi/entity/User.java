@@ -1,5 +1,7 @@
 package com.ktpm.potatoapi.entity;
 
+import com.ktpm.potatoapi.enums.EntityStatus;
+import com.ktpm.potatoapi.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,16 +13,32 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "USERS")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    String username;
-    String fullName;
-    String password;
-    String role;
+    @Column(name = "EMAIL", unique = true, nullable = false)
+    String email;
 
-    @Builder.Default
-    int status = 1;
+    @Column(name = "FULLNAME")
+    String fullName;
+
+    @Column(name = "PASSWORD", nullable = false)
+    String password;
+
+    @Column(name = "ROLE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    Role role;
+
+    @Column(name = "STATUS", nullable = false)
+    @Enumerated(EnumType.STRING)
+    EntityStatus status;
+
+    @PrePersist
+    protected void onCreate() {
+        this.status = EntityStatus.ACTIVE;
+    }
+
 }

@@ -1,8 +1,8 @@
 package com.ktpm.potatoapi.controller;
 
-import com.ktpm.potatoapi.dto.request.UserRequest;
-import com.ktpm.potatoapi.dto.response.ApiResponse;
-import com.ktpm.potatoapi.dto.response.UserResponse;
+import com.ktpm.potatoapi.payload.request.UserRequest;
+import com.ktpm.potatoapi.payload.response.ApiResponse;
+import com.ktpm.potatoapi.payload.response.UserResponse;
 import com.ktpm.potatoapi.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

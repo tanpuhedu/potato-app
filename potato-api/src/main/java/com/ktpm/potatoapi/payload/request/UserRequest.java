@@ -1,4 +1,4 @@
-package com.ktpm.potatoapi.dto.request;
+package com.ktpm.potatoapi.payload.request;
 
 import lombok.AccessLevel;
 import lombok.Getter;

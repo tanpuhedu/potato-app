@@ -1,7 +1,7 @@
 package com.ktpm.potatoapi.mapper;
 
-import com.ktpm.potatoapi.dto.request.UserRequest;
-import com.ktpm.potatoapi.dto.response.UserResponse;
+import com.ktpm.potatoapi.payload.request.UserRequest;
+import com.ktpm.potatoapi.payload.response.UserResponse;
 import com.ktpm.potatoapi.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

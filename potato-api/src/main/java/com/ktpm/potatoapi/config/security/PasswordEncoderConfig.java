@@ -1,4 +1,4 @@
-package com.ktpm.potatoapi.config;
+package com.ktpm.potatoapi.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

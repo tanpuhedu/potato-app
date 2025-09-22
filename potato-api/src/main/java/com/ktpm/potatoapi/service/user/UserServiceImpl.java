@@ -3,6 +3,7 @@ package com.ktpm.potatoapi.service.user;
 import com.ktpm.potatoapi.dto.request.UserRequest;
 import com.ktpm.potatoapi.dto.response.UserResponse;
 import com.ktpm.potatoapi.entity.User;
+import com.ktpm.potatoapi.enums.EntityStatus;
 import com.ktpm.potatoapi.enums.Role;
 import com.ktpm.potatoapi.mapper.UserMapper;
 import com.ktpm.potatoapi.repository.UserRepository;
@@ -61,6 +62,10 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateStatus(Long id, int status) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("not found"));
+
+        // validate status from request param
+        if (status != EntityStatus.INACTIVE.getCode() && status != EntityStatus.ACTIVE.getCode())
+            throw new RuntimeException("invalid status");
 
         user.setStatus(status);
 

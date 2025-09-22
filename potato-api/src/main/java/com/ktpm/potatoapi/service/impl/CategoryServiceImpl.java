@@ -4,7 +4,6 @@ import com.ktpm.potatoapi.entity.Category;
 import com.ktpm.potatoapi.exception.LogicCustomException;
 import com.ktpm.potatoapi.mapper.CategoryMapper;
 import com.ktpm.potatoapi.payload.request.CreateCategoryRequest;
-import com.ktpm.potatoapi.payload.request.UpdateCategoryRequest;
 import com.ktpm.potatoapi.payload.response.CategoryResponse;
 import com.ktpm.potatoapi.repository.CategoryRepository;
 import com.ktpm.potatoapi.service.CategoryService;
@@ -35,16 +34,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void update(UpdateCategoryRequest updateCategoryRequest) {
-        Optional<Category> categoryOptional = categoryRepository.findById(updateCategoryRequest.getId());
+    public void update(CreateCategoryRequest createCategoryRequest, Long id) {
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
         if(categoryOptional.isEmpty()) {
-            log.error("Category id does not exists: {}", updateCategoryRequest.getId());
+            log.error("Category id does not exists: {}", id);
             LogicCustomException logicCustomException = new LogicCustomException();
             logicCustomException.setMessage("Category does not exists");
             logicCustomException.setCode(404);
             throw logicCustomException;
         }
-        Category category = categoryMapper.updateToEntity(updateCategoryRequest);
+        Category category = categoryOptional.get();
+        category.setName(createCategoryRequest.getName());
         categoryRepository.save(category);
         log.info("Category updated: {} {}", category.getId(), category.getName());
     }

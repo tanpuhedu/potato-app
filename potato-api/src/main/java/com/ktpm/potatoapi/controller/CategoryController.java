@@ -1,7 +1,6 @@
 package com.ktpm.potatoapi.controller;
 
 import com.ktpm.potatoapi.payload.request.CreateCategoryRequest;
-import com.ktpm.potatoapi.payload.request.UpdateCategoryRequest;
 import com.ktpm.potatoapi.payload.response.ApiResponse;
 import com.ktpm.potatoapi.payload.response.CategoryResponse;
 import com.ktpm.potatoapi.service.CategoryService;
@@ -49,10 +48,10 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @Operation(summary = "Update category by id", description = "API for all ADMIN to update category")
-    public ResponseEntity<?> updateCategory(@RequestBody UpdateCategoryRequest updateCategoryRequest) {
-        categoryService.update(updateCategoryRequest);
+    public ResponseEntity<?> updateCategory(@RequestBody CreateCategoryRequest createCategoryRequest, @PathVariable Long id) {
+        categoryService.update(createCategoryRequest, id);
         ApiResponse<Void> response = ApiResponse.<Void>builder()
                 .message("Update category successful")
                 .status(HttpStatus.OK.value())

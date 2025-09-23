@@ -19,13 +19,12 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Category")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "NAME", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     String name;
 }

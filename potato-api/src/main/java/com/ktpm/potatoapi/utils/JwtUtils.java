@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.function.Function;
 
 public class JwtUtils {
-    private static final long EXPIRATION_TIME = 60 * 60 * 24 * 7 * 1000L; // 7 days
+    private static final long EXPIRATION_TIME =  60 * 60 * 1000L; // 1hr
     private static final String SECRET = "ThisIsASecureJWTSecretKey1234567890ofPotatoWebApplication@@@";
 
     public static String createToken(User user, HttpServletRequest request) {

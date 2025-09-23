@@ -3,7 +3,7 @@ package com.ktpm.potatoapi.controller;
 import com.ktpm.potatoapi.payload.request.CreateCategoryRequest;
 import com.ktpm.potatoapi.payload.response.ApiResponse;
 import com.ktpm.potatoapi.payload.response.CategoryResponse;
-import com.ktpm.potatoapi.service.CategoryService;
+import com.ktpm.potatoapi.service.category.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +17,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller that provides APIs for managing categories.
+ * <p>
+ * This controller exposes endpoints under {@code /api/categories} for:
+ * <ul>
+ *     <li>Create a new category (ADMIN only)</li>
+ *     <li>Retrieve a list of all categories (accessible by all users)</li>
+ *     <li>Update an existing category by ID (ADMIN only)</li>
+ *     <li>Delete a category by ID (ADMIN only)</li>
+ * </ul>
+ *
+ * It delegates category-related business logic to the {@link CategoryService}.
+ * @author Hieu
+ */
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
@@ -39,7 +53,7 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "Show all categories in system", description = "API for all user")
-    public ResponseEntity<?> listCategory(){
+    public ResponseEntity<?> listCategory() {
         ApiResponse<List<CategoryResponse>> response = ApiResponse.<List<CategoryResponse>>builder()
                 .data(categoryService.listCategory())
                 .message("List category successful")

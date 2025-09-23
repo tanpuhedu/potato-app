@@ -1,4 +1,4 @@
-package com.ktpm.potatoapi.service.impl;
+package com.ktpm.potatoapi.service.category;
 
 import com.ktpm.potatoapi.entity.Category;
 import com.ktpm.potatoapi.exception.LogicCustomException;
@@ -6,7 +6,6 @@ import com.ktpm.potatoapi.mapper.CategoryMapper;
 import com.ktpm.potatoapi.payload.request.CreateCategoryRequest;
 import com.ktpm.potatoapi.payload.response.CategoryResponse;
 import com.ktpm.potatoapi.repository.CategoryRepository;
-import com.ktpm.potatoapi.service.CategoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

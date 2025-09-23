@@ -1,4 +1,4 @@
-package com.ktpm.potatoapi.payload.request;
+package com.ktpm.potatoapi.dto.request;
 
 
 import jakarta.validation.constraints.Email;
@@ -14,18 +14,18 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserSignUpRequest {
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email must be valid")
+    @NotBlank(message = "USER_EMAIL_BLANK")
+    @Email(message = "USER_EMAIL_INVALID")
     String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
+    @NotBlank(message = "USER_PASSWORD_BLANK")
+    @Size(min = 8, max = 20, message = "USER_PASSWORD_INVALID_SIZE")
     @Pattern(
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$",
-            message = "Password must contain at least one uppercase, one lowercase, one digit, and one special character"
+            message = "USER_PASSWORD_INVALID_PATTERN"
     )
     String password;
 
-    @NotBlank(message = "Full name is required")
+    @NotBlank(message = "USER_FULLNAME_BLANK")
     String fullName;
 }

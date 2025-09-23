@@ -1,4 +1,4 @@
-package com.ktpm.potatoapi.payload.response;
+package com.ktpm.potatoapi.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

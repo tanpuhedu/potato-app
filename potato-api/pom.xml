@@ -94,11 +94,18 @@
 			<version>0.12.5</version>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- MapStruct -->
+		<!--    mapstruct    -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>1.5.5.Final</version>
+		</dependency>
+		<!--    mapstruct processor    -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>1.5.5.Final</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -112,6 +119,7 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>1.18.40</version>
 						</path>
 						<path>
 							<groupId>org.mapstruct</groupId>

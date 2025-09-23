@@ -1,5 +1,6 @@
 package com.ktpm.potatoapi.config.openapi;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -12,9 +13,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OpenApiConfig {
-
-    String jwtScheme = "bearerAuth";
-
     @Bean
     public OpenAPI openAPI() {
         Info info = new Info()
@@ -22,17 +20,21 @@ public class OpenApiConfig {
                 .version("v1.0.0")
                 .description("Potato API Service");
 
-        return new OpenAPI().info(info).addSecurityItem(new SecurityRequirement()
-                        .addList(jwtScheme)
-                )
-                .components(new io.swagger.v3.oas.models.Components()
-                        // Jwt (Bearer) Auth
-                        .addSecuritySchemes(jwtScheme,
-                                new io.swagger.v3.oas.models.security.SecurityScheme()
-                                        .name(jwtScheme)
-                                        .type(SecurityScheme.Type.HTTP)
-                                        .scheme("bearer")
-                                        .bearerFormat("JWT"))
-                );
+        String jwtScheme = "bearerAuth";
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtScheme);
+
+        SecurityScheme securityScheme = new SecurityScheme()
+                .name(jwtScheme)
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT");
+
+        // Jwt (Bearer) Auth
+        Components components = new Components().addSecuritySchemes(jwtScheme, securityScheme);
+
+        return new OpenAPI()
+                .info(info)
+                .addSecurityItem(securityRequirement)
+                .components(components);
     }
 }

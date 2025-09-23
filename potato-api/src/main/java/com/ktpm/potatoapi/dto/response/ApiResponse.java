@@ -1,4 +1,4 @@
-package com.ktpm.potatoapi.payload.response;
+package com.ktpm.potatoapi.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
@@ -10,12 +10,13 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL )
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApiResponse<T> {
+    @Builder.Default
+    Integer statusCode = 1000; // Default successful status
+
     T data;
     String message;
-
-    @Builder.Default
-    Integer status = 1000; // Default status successful
+    String path;
 }

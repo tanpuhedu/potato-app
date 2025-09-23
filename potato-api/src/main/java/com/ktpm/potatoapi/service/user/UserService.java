@@ -1,14 +1,10 @@
 package com.ktpm.potatoapi.service.user;
 
-import com.ktpm.potatoapi.payload.request.UserLogInRequest;
-import com.ktpm.potatoapi.payload.request.UserRequest;
-import com.ktpm.potatoapi.payload.request.UserSignUpRequest;
-import com.ktpm.potatoapi.payload.response.UserLogInResponse;
-import com.ktpm.potatoapi.payload.response.UserResponse;
+import com.ktpm.potatoapi.dto.request.UserLogInRequest;
+import com.ktpm.potatoapi.dto.request.UserSignUpRequest;
+import com.ktpm.potatoapi.dto.response.UserLogInResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
@@ -27,19 +23,8 @@ public interface UserService extends UserDetailsService {
      * Log in an existing user.
      *
      * @param userLogInRequest the login request containing email and password
-     * @param request the current HTTP request (used for additional context or authorization)
+     * @param httpRequest the current HTTP request (used for additional context or authorization)
      * @return a {@link UserLogInResponse} containing username, email, and authentication token
      */
-    UserLogInResponse logIn(UserLogInRequest userLogInRequest, HttpServletRequest request);
-
-    // Phú thành code
-    /*
-
-    List<UserResponse> getAll();
-    UserResponse getById(Long id);
-    UserResponse createCustomer(UserRequest request);
-    UserResponse update(Long id, UserRequest request);
-    UserResponse updateStatus(Long id, int status);
-
-     */
+    UserLogInResponse logIn(UserLogInRequest userLogInRequest, HttpServletRequest httpRequest);
 }

@@ -13,26 +13,25 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "USERS")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "EMAIL", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     String email;
 
-    @Column(name = "FULLNAME")
+    @Column(nullable = false)
     String fullName;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(nullable = false)
     String password;
 
-    @Column(name = "ROLE", nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     Role role;
 
-    @Column(name = "STATUS", nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     EntityStatus status;
 
@@ -41,5 +40,4 @@ public class User {
         this.status = EntityStatus.ACTIVE;
         this.role = Role.CUSTOMER;
     }
-
 }

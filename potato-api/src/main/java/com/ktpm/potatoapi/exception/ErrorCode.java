@@ -37,7 +37,12 @@ public enum ErrorCode {
             HttpStatus.BAD_REQUEST
     ),
     USER_FULLNAME_BLANK(3008, "Full name is required", HttpStatus.BAD_REQUEST),
-    ;
+
+    // MERCHANT ERROR,
+    MERCHANT_EXISTED(4001, "Merchant already existed", HttpStatus.BAD_REQUEST),
+    MERCHANT_NOT_FOUND(4002, "Merchant not existed", HttpStatus.NOT_FOUND),
+    MERCHANT_NAME_BLANK(4003, "Merchant name is required", HttpStatus.BAD_REQUEST),
+    MERCHANT_INACTIVE(4004, "Merchant is inactive", HttpStatus.BAD_REQUEST);
 
     private final Integer code;
     private final String message;

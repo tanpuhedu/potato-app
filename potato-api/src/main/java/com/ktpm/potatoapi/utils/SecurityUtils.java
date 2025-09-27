@@ -1,11 +1,15 @@
 package com.ktpm.potatoapi.utils;
 
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public class SecurityUtils {
-    public static String getCurrentUser(HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-        // return email
-        return JwtUtils.extractUsername(token);
+    public static String getCurrentUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            return userDetails.getUsername(); // return user email
+        }
+        return null;
     }
 }

@@ -1,6 +1,8 @@
 package com.ktpm.potatoapi.service.user;
 
+import com.ktpm.potatoapi.entity.Merchant;
 import com.ktpm.potatoapi.entity.User;
+import com.ktpm.potatoapi.enums.EntityStatus;
 import com.ktpm.potatoapi.enums.Role;
 import com.ktpm.potatoapi.exception.AppException;
 import com.ktpm.potatoapi.exception.ErrorCode;
@@ -8,6 +10,7 @@ import com.ktpm.potatoapi.mapper.UserMapper;
 import com.ktpm.potatoapi.dto.request.UserLogInRequest;
 import com.ktpm.potatoapi.dto.request.UserSignUpRequest;
 import com.ktpm.potatoapi.dto.response.UserLogInResponse;
+import com.ktpm.potatoapi.repository.MerchantRepository;
 import com.ktpm.potatoapi.repository.UserRepository;
 import com.ktpm.potatoapi.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,16 +18,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +32,7 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
     UserMapper userMapper;
+    MerchantRepository merchantRepository;
 
     @Override
     public UserLogInResponse signUp(UserSignUpRequest userSignUpRequest , HttpServletRequest httpRequest) {
@@ -43,6 +42,7 @@ public class UserServiceImpl implements UserService {
         // Create new user
         User user = userMapper.mapSignUpRequestToEntity(userSignUpRequest);
         user.setPassword(passwordEncoder.encode(userSignUpRequest.getPassword()));
+        user.setRole(Role.CUSTOMER);
         userRepository.save(user);
 
         // Generate Jwt token
@@ -62,6 +62,14 @@ public class UserServiceImpl implements UserService {
         if(!isAuthenticated)
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
+        if (user.getRole() == Role.MERCHANT_ADMIN) {
+            Merchant merchant = merchantRepository.findByMerchantAdmin_Email(userLogInRequest.getEmail())
+                    .orElseThrow(() -> new AppException(ErrorCode.MERCHANT_NOT_FOUND));
+
+            if (merchant.getStatus() == EntityStatus.INACTIVE)
+                throw new AppException(ErrorCode.MERCHANT_INACTIVE);
+        }
+
         // Generate token
         UserLogInResponse userLogInResponse = userMapper.toLogInResponse(user);
         userLogInResponse.setToken(JwtUtils.createToken(user, httpRequest));
@@ -71,19 +79,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> checker = userRepository.findByEmail(username);
-        if (checker.isEmpty())
-            throw new UsernameNotFoundException(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
-        User user = checker.get();
-        Role role = user.getRole();
+        if (user.getRole() == Role.MERCHANT_ADMIN) {
+            Merchant merchant = merchantRepository.findByMerchantAdmin_Email(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("Merchant not found for admin: " + email));
 
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role.name());
-        grantedAuthorities.add(simpleGrantedAuthority);
+            if (merchant.getStatus() == EntityStatus.INACTIVE) {
+                throw new DisabledException("Merchant inactive for user: " + email);
+            }
+        }
 
-        return new org.springframework.security.core.userdetails.User
-                (user.getEmail(), user.getPassword(), grantedAuthorities);
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities(user.getRole().name())
+                .build();
     }
 }

@@ -39,7 +39,6 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/merchant/categories/**").hasAuthority("CUSTOMER")
                         .requestMatchers("/admin/**").hasAuthority("SYSTEM_ADMIN")
                         .anyRequest().authenticated()
                 )

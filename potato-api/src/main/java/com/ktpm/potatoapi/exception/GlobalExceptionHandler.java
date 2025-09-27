@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -92,18 +91,6 @@ public class GlobalExceptionHandler {
             resolvedMessage = resolvedMessage.replace("{" + key + "}", value);
         }
         return resolvedMessage;
-    }
-
-    // xử lí lỗi đúng token mà không có quyền truy cập
-    @ExceptionHandler(value = AccessDeniedException.class)
-    ResponseEntity<ApiResponse<?>> handleAccessDeniedException(HttpServletRequest httpRequest) {
-        ApiResponse<?> apiResponse = ApiResponse.builder()
-                .statusCode(ErrorCode.UNAUTHORIZED.getCode())
-                .message(ErrorCode.UNAUTHORIZED.getMessage())
-                .path(httpRequest.getRequestURI())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiResponse);
     }
 
     // xử lí lỗi gửi JSON sai định dạng, k parse vào object được

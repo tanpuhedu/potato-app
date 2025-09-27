@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mysql://root:NCRpTkSlvBaQjxefJsnohGlJwmujBPke@tramway.proxy.rlwy.net:44002/railway
+    username: root
+    password: NCRpTkSlvBaQjxefJsnohGlJwmujBPke
+
+app:
+  server-url: https://executives-blowing-creatures-scientist.trycloudflare.com

@@ -1,19 +1,25 @@
 package com.ktpm.potatoapi.config.openapi;
 
+import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OpenApiConfig {
 
-    String jwtScheme = "bearerAuth";
+    @Value("${app.server-url}")
+    private String serverUrl;
+
+    private String jwtScheme = "bearerAuth";
 
     @Bean
     public OpenAPI openAPI() {
@@ -22,7 +28,11 @@ public class OpenApiConfig {
                 .version("v1.0.0")
                 .description("Potato API Service");
 
-        return new OpenAPI().info(info).addSecurityItem(new SecurityRequirement()
+        return new OpenAPI().info(info)
+                .servers(List.of(
+                        new Server().url(serverUrl + "/potato-api")
+                ))
+                .addSecurityItem(new SecurityRequirement()
                         .addList(jwtScheme)
                 )
                 .components(new io.swagger.v3.oas.models.Components()
